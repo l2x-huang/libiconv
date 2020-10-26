@@ -73,29 +73,6 @@ if ( NOT MSVC )
 endif()
 target_compile_options (charset PRIVATE -DBUILDING_LIBCHARSET)
 
-if ( NOT MSVC )
-  # libicrt
-  set ( SRC_LIBICRT 
-    srclib/allocator.c
-    srclib/areadlink.c
-    srclib/careadlinkat.c
-    srclib/malloca.c
-    srclib/progname.c
-    srclib/safe-read.c
-    srclib/uniwidth/width.c
-    srclib/xmalloc.c
-    srclib/xstrdup.c
-    srclib/xreadlink.c
-    srclib/canonicalize-lgpl.c
-    srclib/error.c
-    srclib/lstat.c
-    srclib/readlink.c
-    srclib/stat.c
-    srclib/strerror.c
-    srclib/strerror-override.c  
-  )
-  add_library ( icrt STATIC ${SRC_LIBICRT} )
-endif()
 # libiconv
 set ( SRC_LIBICONV
   lib/iconv.c
@@ -104,14 +81,6 @@ set ( SRC_LIBICONV
 add_library ( iconv ${SRC_LIBICONV} )
 target_link_libraries ( iconv charset )
 set_target_properties ( iconv PROPERTIES COMPILE_FLAGS -DBUILDING_LIBICONV)
-
-if(NOT MSVC)
-  add_executable ( iconvcli src/iconv_no_i18n.c )
-  target_link_libraries ( iconvcli iconv icrt charset )
-  set_target_properties ( iconvcli PROPERTIES OUTPUT_NAME iconv )
-
-  install_executable ( iconvcli )
-endif()
 
 # fix library naming for Visual Studio compilers
 if(MSVC)
